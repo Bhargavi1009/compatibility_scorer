@@ -1,0 +1,5 @@
+Name,SleepTime,Cleanliness,WorkSchedule,FoodHabits
+Alice,Night Owl,Neat,Remote,Vegetarian
+Bob,Early Bird,Messy,Office,Non-Vegetarian
+Charlie,Night Owl,Neat,Remote,Vegetarian
+Diana,Night Owl,Neat,Remote,Non-Vegetarian

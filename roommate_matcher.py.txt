@@ -1,0 +1,61 @@
+import csv
+from typing import List, Tuple
+
+WEIGHTS = {
+    'SleepTime': 30,
+    'Cleanliness': 30,
+    'WorkSchedule': 20,
+    'FoodHabits': 20
+}
+
+class RoommateProfile:
+    def __init__(self, name, sleep_time, cleanliness, work_schedule, food_habits):
+        self.name = name
+        self.sleep_time = sleep_time.lower()
+        self.cleanliness = cleanliness.lower()
+        self.work_schedule = work_schedule.lower()
+        self.food_habits = food_habits.lower()
+
+    def score_against(self, other: 'RoommateProfile') -> int:
+        score = 0
+        if self.sleep_time == other.sleep_time:
+            score += WEIGHTS['SleepTime']
+        if self.cleanliness == other.cleanliness:
+            score += WEIGHTS['Cleanliness']
+        if self.work_schedule == other.work_schedule:
+            score += WEIGHTS['WorkSchedule']
+        if self.food_habits == other.food_habits:
+            score += WEIGHTS['FoodHabits']
+        return score
+
+def load_profiles(filename: str) -> List[RoommateProfile]:
+    profiles = []
+    with open(filename, 'r', newline='') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            profiles.append(RoommateProfile(
+                name=row['Name'],
+                sleep_time=row['SleepTime'],
+                cleanliness=row['Cleanliness'],
+                work_schedule=row['WorkSchedule'],
+                food_habits=row['FoodHabits']
+            ))
+    return profiles
+
+def compute_matches(profiles: List[RoommateProfile]) -> List[Tuple[str, str, int]]:
+    matches = []
+    for i in range(len(profiles)):
+        for j in range(i + 1, len(profiles)):
+            p1, p2 = profiles[i], profiles[j]
+            score = p1.score_against(p2)
+            matches.append((p1.name, p2.name, score))
+    matches.sort(key=lambda x: x[2], reverse=True)
+    return matches
+
+if __name__ == "__main__":
+    profiles = load_profiles('profiles.csv')
+    matches = compute_matches(profiles)
+
+    print("\nTop Roommate Matches:")
+    for name1, name2, score in matches:
+        print(f"{name1} & {name2}: Score = {score}")
